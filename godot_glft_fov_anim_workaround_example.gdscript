@@ -1,0 +1,33 @@
+extends Node3D
+ 
+@onready var camera = $Camera
+@onready var animation_player = $AnimationPlayer
+@onready var fov_reference_object = $FOV
+
+#10 seems to result in a close replication of the Blender focal length. 
+var sensor_width = 10
+const pi = 3.14159
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+    pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+    var hfov_degrees = calculate_hfov(sensor_width, fov_reference_object.position.x)
+    print(hfov_degrees)
+    camera.fov = hfov_degrees
+    pass
+
+func calculate_hfov(sensor_width, focal_length):
+    # Convert sensor width and focal length to radians
+    var sensor_width_rad = sensor_width * (pi / 180)
+    var focal_length_rad = focal_length * (pi / 180)
+
+    # Calculate the horizontal field of view (HFOV) in radians
+    var hfov_rad = 2 * atan(sensor_width_rad / focal_length_rad)
+
+    # Convert HFOV from radians to degrees
+    var hfov_deg = rad_to_deg(hfov_rad)
+
+    return hfov_deg
